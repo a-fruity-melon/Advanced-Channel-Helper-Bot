@@ -63,9 +63,6 @@
       color: #aaa;
       font-size: 0.5rem;
     }
-    .emoji {
-      font-family: 'Noto Color Emoji', sans-serif;
-    }
   </style>
 </head>
 <body>
@@ -155,9 +152,9 @@
 
       const nameNode = document.createElement("span");
       nameNode.className = "user";
-      nameNode.innerText = handleEmoji(name);
+      nameNode.innerText = name;
       if(replyTo) {
-        nameNode.innerText += " → " + handleEmoji(replyTo);
+        nameNode.innerText += " → " + replyTo;
       }
       commentNode.appendChild(nameNode);
 
@@ -181,22 +178,16 @@
 
         const captionNode = document.createElement("span");
         captionNode.className = "content";
-        captionNode.innerHTML = handleEmoji(content.replace(/\n/g, "<br />"));
+        captionNode.innerHTML = content.replace(/\n/g, "<br />");
 
         contentNode.appendChild(imageWrapNode);
         contentNode.appendChild(captionNode);
       } else {
-        contentNode.innerHTML = handleEmoji(content.replace(/\n/g, "<br />"));
+        contentNode.innerHTML = content.replace(/\n/g, "<br />");
       }
       commentNode.appendChild(contentNode);
       sessionNode.appendChild(commentNode);
       return true;
-    }
-
-    const emojiRegex = /(([\u2000-\u3300]|[\ud83c-\ud83e][\ud000-\udfff])+)/gu;
-
-    function handleEmoji(text="") {
-      return text.replace(emojiRegex, '<span class="emoji">$1</span>');
     }
 
     function afterComment(session) {

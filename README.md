@@ -40,7 +40,7 @@ Advanced Channel Helper Bot 并不满足于只服务一个频道。任何人都�
 
 ## 部署
 
-为了能运行 Advanced Channel Helper Bot，需要准备一个 Python 3 的环境，并需要使用 pip安装相应的依赖。
+为了能运行 Advanced Channel Helper Bot，需要准备一个 Python 3 的环境，并需要使用 pip 安装相应的依赖。
 
 ### 安装依赖 
 
