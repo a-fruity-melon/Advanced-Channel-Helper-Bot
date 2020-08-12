@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400&family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <style>
+    .session {
+      display: block;
+      height: fit-content;
+      width: 400px;
+      overflow-wrap: break-word;
+      padding: 2px 4px 24px 6px;
+    }
+    .comment-wrap {
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #ccc;
+    }
+    .date {
+      color: #777;
+      font-family: Consolas, 'Courier New', Courier, monospace;
+      margin-right: 0;
+      font-size: 0.5rem;
+    }
+    .time {
+      color: #888;
+      font-family: Consolas, 'Courier New', Courier, monospace;
+      margin-right: 6px;
+      font-size: 0.7rem;
+    }
+    .user {
+      font-family: 'Noto Sans SC', Roboto, sans-serif;
+      color: #888;
+      margin-right: 10px;
+      font-size: 0.7rem;
+    }
+    .image-wrap {
+      display: inline-block;
+      max-height: 120px;
+      overflow: hidden;
+      vertical-align: middle;
+      margin: auto 0;
+    }
+    .image {
+      margin-right: 10px;
+    }
+    .content {
+      font-family: 'Noto Sans SC', Roboto, sans-serif;
+      color: #222;
+    }
+    .header {
+      font-size: 1.4rem;
+    }
+    .about {
+      color: #aaa;
+      font-size: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    window.onload = () => window.loaded = true;
+    /**
+     * @param {string} str
+     * @return {string}
+     */
+    function padStart(str, len) {
+      "use strict";
+      str = String(str);
+      while(str.length < len) {
+        str = "0" + str;
+      }
+      return str;
+    }
+    function createSession() {
+      const sessionNode = document.createElement("div");
+      const sessionId = padStart(Math.floor(Math.random() * (16 ** 12)).toString(16), 12);
+      sessionNode.id = "session-" + sessionId;
+      sessionNode.className = "session";
+
+      const headerNode = document.createElement("div");
+      headerNode.className = "header";
+      headerNode.innerText = "评论区 / Recent Comments";
+      sessionNode.appendChild(headerNode);
+
+      document.body.appendChild(sessionNode);
+      return sessionId;
+    }
+    /**
+     * @param {string} session
+     * @param {number} time
+     * @param {string} name
+     * @param {string} [replyTo]
+     * @param {string} uid
+     * @param {"text" | "image"} type
+     * @param {string} content
+     * @param {string} [url]
+     * @param {string} [flag]
+     */
+    function createComment(session, time, name, replyTo, uid, type, content, url, flag) {
+      "use strict";
+      if(!session || !uid) return false;
+      const sessionNode = document.getElementById("session-" + session);
+      if(!sessionNode) return false;
+
+      if(!window.images) {
+        window.images = {};
+      }
+
+      name = decodeURIComponent(name);
+      replyTo = decodeURIComponent(replyTo);
+      content = decodeURIComponent(content);
+
+      if(name.length > 13) {
+        name = name.substr(0, 10) + "...";
+      }
+      if(replyTo.length > 13) {
+        replyTo = replyTo.substr(0, 10) + "...";
+      }
+      
+      const now = new Date(time);
+
+      const existCommentNodes = sessionNode.querySelectorAll(".comment-wrap");
+      const maxCommentId = existCommentNodes.length ? Number(
+        Array.from(existCommentNodes).sort((a, b) => {
+          return Number(a.id.replace("comment-", "")) - Number(b.id.replace("comment-", ""));
+        }).pop().id.replace("comment-", "")
+      ) : 0;
+
+      const commentNode = document.createElement("div");
+      commentNode.id = "comment-" + (maxCommentId + 1);
+      commentNode.className = "comment-wrap";
+      commentNode.setAttribute("from", uid);
+
+      const dateNode = document.createElement("span");
+      dateNode.className = "date";
+      dateNode.innerText = padStart(now.getMonth() + 1, 2) + "-" + padStart(now.getDate(), 2) + " ";
+      commentNode.appendChild(dateNode);
+      
+      const timeNode = document.createElement("span");
+      timeNode.className = "time";
+      timeNode.innerText = padStart(now.getHours(), 2) + ":" + padStart(now.getMinutes(), 2);
+      commentNode.appendChild(timeNode);
+
+      const nameNode = document.createElement("span");
+      nameNode.className = "user";
+      nameNode.innerText = name;
+      if(replyTo) {
+        nameNode.innerText += " → " + replyTo;
+      }
+      commentNode.appendChild(nameNode);
+
+      const contentNode = document.createElement("span");
+      contentNode.className = "content";
+      if(type === "image") {
+        const imageWrapNode = document.createElement("div");
+        imageWrapNode.className = "image-wrap";
+        const imageNode = document.createElement("img");
+        if(!url.startsWith("http")) return false;
+        imageNode.src = url;
+        imageNode.width = 80;
+        imageNode.className = "image";
+        if(flag) {
+          if(window.images[flag]) return false;
+          imageNode.onload = function() {
+            window.images[flag] = true;
+          };
+        }
+        imageWrapNode.appendChild(imageNode);
+
+        const captionNode = document.createElement("span");
+        captionNode.className = "content";
+        captionNode.innerHTML = content.replace(/\n/g, "<br />");
+
+        contentNode.appendChild(imageWrapNode);
+        contentNode.appendChild(captionNode);
+      } else {
+        contentNode.innerHTML = content.replace(/\n/g, "<br />");
+      }
+      commentNode.appendChild(contentNode);
+      sessionNode.appendChild(commentNode);
+      return true;
+    }
+
+    function afterComment(session) {
+      const sessionNode = document.getElementById("session-" + session);
+      if(!sessionNode) return false;
+
+      const aboutNode = document.createElement("div");
+      aboutNode.className = "about";
+      aboutNode.innerText = "Powered By Advanced Channel Helper Bot";
+      sessionNode.appendChild(aboutNode);
+      return true;
+    }
+
+    function removeSession(session) {
+      const sessionNode = document.getElementById("session-" + session);
+      if(!sessionNode) return false;
+
+      sessionNode.parentNode.removeChild(sessionNode);
+      return true;
+    }
+
+    /**
+     * @param {string} nodeId
+     * @return {[[number, number], [number, number]]} [[x1,y1],[w,h]]
+     */
+    function getRect(nodeId) {
+      const node = document.getElementById(nodeId);
+      const rect = node.getBoundingClientRect();
+      return [
+        [rect.left, rect.top],
+        [rect.width, rect.height],
+      ];
+    }
+
+    function getSessionRect(sessionId) {
+      return getRect("session-" + sessionId);
+    }
+  </script>
+</body>
+</html>

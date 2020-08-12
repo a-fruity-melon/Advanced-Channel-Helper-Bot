@@ -1,0 +1,17 @@
+{
+  "name": "draw-comments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPL",
+  "dependencies": {
+    "express": "5.0.0-alpha.8",
+    "jimp": "^0.16.0",
+    "puppeteer-core": "^5.2.1"
+  }
+}
