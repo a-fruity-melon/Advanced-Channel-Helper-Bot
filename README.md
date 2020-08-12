@@ -74,13 +74,15 @@ module.exports = {
 };
 ```
 
+P.S. 在 Ubuntu 上，你也可以使用 `sudo apt-get install chromium-browser` 来安装 `chromium`。使用 `which chromium` 来查看可执行文件的位置。
+
 假如你没看懂，说明你不适合配置本 bot 的服务器端。（棒读
 
 ### 运行 bot 
 
 `python3 helper_main.py`
 
-`cd ./draw-comments && node index.js`
+`cd ./draw-comments && nohup node index.js 1 >> output.log 2>&1 &`
 
 ## 致谢
 
