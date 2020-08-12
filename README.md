@@ -80,6 +80,8 @@ module.exports = {
 
 `python3 helper_main.py`
 
+`cd ./draw-comments && node index.js`
+
 ## 致谢
 
 Advanced Channel Helper Bot 站在 [Channel Helper Bot](https://github.com/JogleLew/channel-helper-bot) 的肩膀上。
