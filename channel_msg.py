@@ -4,6 +4,7 @@
 """ Channel Helper Bot """
 """ channel_msg.py """
 """ Copyright 2018, Jogle Lew """
+import sys
 import helper_const
 import helper_global
 import helper_database
@@ -51,9 +52,10 @@ def add_comment(bot, chat_id, config, message_id, media_group_id=None):
 
     records = helper_database.get_recent_records(chat_id, message_id, recent)
 
-    comment_message = bot.send_message(
+    comment_message = bot.send_photo(
+        photo=open(sys.path[0] + "/default.jpg", "rb"),
+        caption=helper_global.records_to_str(records, channel_lang),
         chat_id=chat_id, 
-        text=helper_global.records_to_str(records, channel_lang), 
         reply_to_message_id=message_id,
         reply_markup=motd_markup, 
         parse_mode=telegram.ParseMode.HTML
