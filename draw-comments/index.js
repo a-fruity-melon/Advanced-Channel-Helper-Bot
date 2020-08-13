@@ -12,26 +12,15 @@ const PORT = 6899;
 console.log("[PID]", process.pid);
 
 /**
- * @type {puppeteer.Browser}
+ * @param {{ pageLoaded: boolean; }} scope
+ * @returns {Promise<[puppeteer.Browser, puppeteer.Page]>}
  */
-let browser;
-
-/**
- * @type {puppeteer.Page}
- */
-let page;
-
-let pageLoaded = false;
-
-async function initBrowser() {
-  if(browser) {
-    await browser.close();
-  }
-  browser = await puppeteer.launch({
+async function initBrowser(scope) {
+  const browser = await puppeteer.launch({
     executablePath: config.CHROME_PATH,
     headless: !process.argv.includes("--debug"),
   });
-  page = (await browser.pages())[0];
+  let page = (await browser.pages())[0];
   const oldPage = page;
   page = await browser.newPage();
   await oldPage.close();
@@ -40,30 +29,30 @@ async function initBrowser() {
     height: 768,
     deviceScaleFactor: 4,
   });
-  await page.goto(`file:///${__dirname}/comments.html`, {
-    timeout: 5000,
-  }).catch(() => {
-    pageLoaded = false;
-    initBrowser();
-  });
-  while(!await page.evaluate("window.loaded")) {
-    await sleep(500);
+  try {
+    await page.goto(`file:///${__dirname}/comments.html`, {
+      timeout: 5000,
+    });
+    while(!await page.evaluate("window.loaded")) {
+      await sleep(500);
+    }
+    scope.pageLoaded = true;
+    page.once("close", () => {
+      scope.pageLoaded = false;
+    });
+    console.log("Browser loaded.");
+    return [browser, page];
+  } catch (e) {
+    scope.pageLoaded = false;
+    return await initBrowser(scope);
   }
-  pageLoaded = true;
-  page.on("close", () => {
-    pageLoaded = false;
-    initBrowser();
-  });
-  setTimeout(() => {
-    pageLoaded = false;
-    initBrowser();
-  }, 30 * 60 * 1e3);
-  console.log("Browser loaded.");
 }
 
-function initServer() {
+async function initServer() {
   app.get("/render/:comments", async (req, res) => {
-    while(!pageLoaded) {
+    const scope = { pageLoaded: false };
+    const [browser, page] = await initBrowser(scope);
+    while(!scope.pageLoaded) {
       await sleep(100);
     }
     /**
@@ -120,6 +109,8 @@ function initServer() {
     res.send({path: imagePath});
     res.end();
     await page.evaluate(`removeSession("${sessionId}");`);
+    await page.close();
+    await browser.close();
   });
   app.listen(PORT, () => console.log("app listening on", PORT));
 }
@@ -131,5 +122,4 @@ function sleep(ms) {
   return new Promise(res => setTimeout(res, ms));
 }
 
-
-initBrowser().then(initServer);
+initServer();
