@@ -53,7 +53,7 @@ def add_comment(bot, chat_id, config, message_id, media_group_id=None):
     records = helper_database.get_recent_records(chat_id, message_id, recent)
 
     comment_message = bot.send_photo(
-        photo=open(sys.path[0] + "/default.jpg", "rb"),
+        photo=open(sys.path[0] + "/default-comment.jpg", "rb"),
         caption=helper_global.records_to_str(records, channel_lang),
         chat_id=chat_id, 
         reply_to_message_id=message_id,
