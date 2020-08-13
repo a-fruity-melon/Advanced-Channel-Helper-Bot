@@ -348,7 +348,7 @@ def private_msg(bot, update):
         }, tag="private", log_level=80)
         comment_message = bot.send_photo(
             chat_id=channel_id,
-            photo=open(sys.path[0] + "/default.jpg", "rb"),
+            photo=open(sys.path[0] + "/default-comment.jpg", "rb"),
             caption=helper_global.value("comment_refreshing", "Refreshing...", lang=channel_lang),
             reply_to_message_id=msg_id,
             parse_mode=telegram.ParseMode.HTML
