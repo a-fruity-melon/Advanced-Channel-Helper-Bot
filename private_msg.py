@@ -196,6 +196,8 @@ def update_comments(bot, channel_id, msg_id, update_mode):
 
     infos = []
 
+    render_as_text_records = []
+
     for record in rev_records:
         name = record[3]
         ftype = "text" if record[4] == "text" else "unsupported"
@@ -223,6 +225,13 @@ def update_comments(bot, channel_id, msg_id, update_mode):
             "replyTo": reply_to
         }
         infos.append(info)
+        if ftype == "text":
+            render_as_text_records.append(record)
+        else:
+            render_as_text_records = []
+
+    render_as_text_records.reverse()
+    infos = infos[0:len(infos) - len(render_as_text_records)]
 
     remote = "http://127.0.0.1:6899/render/" + urllib.parse.quote(json.dumps(infos), safe='')
     with urllib.request.urlopen(remote) as resp:
@@ -235,8 +244,9 @@ def update_comments(bot, channel_id, msg_id, update_mode):
             photo = photo_message.photo[0]
             media = telegram.InputMediaPhoto(photo.file_id)
             bot.edit_message_media(
-                # text=helper_global.records_to_str(records, channel_lang),
+                # text=helper_global.records_to_str(render_as_text_records, channel_lang),
                 media=media,
+                caption=helper_global.records_to_str(render_as_text_records, channel_lang),
                 chat_id=channel_id, 
                 message_id=comment_id, 
                 parse_mode=telegram.ParseMode.HTML,

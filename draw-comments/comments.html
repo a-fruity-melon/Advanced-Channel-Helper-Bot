@@ -22,11 +22,15 @@
       padding-bottom: 4px;
       border-bottom: 1px solid #ccc;
     }
+    .info {
+      display: block;
+      float: right;
+    }
     .date {
-      color: #777;
+      color: #888;
       font-family: Consolas, 'Courier New', Courier, monospace;
       margin-right: 0;
-      font-size: 0.5rem;
+      font-size: 0.7rem;
     }
     .time {
       color: #888;
@@ -36,7 +40,7 @@
     }
     .user {
       font-family: 'Noto Sans SC', Roboto, sans-serif;
-      color: #888;
+      color: #777;
       margin-right: 10px;
       font-size: 0.7rem;
     }
@@ -140,15 +144,18 @@
       commentNode.className = "comment-wrap";
       commentNode.setAttribute("from", uid);
 
+      const infoNode = document.createElement("span");
+      infoNode.className = "info";
+
       const dateNode = document.createElement("span");
       dateNode.className = "date";
       dateNode.innerText = padStart(now.getMonth() + 1, 2) + "-" + padStart(now.getDate(), 2) + " ";
-      commentNode.appendChild(dateNode);
+      infoNode.appendChild(dateNode);
       
       const timeNode = document.createElement("span");
       timeNode.className = "time";
       timeNode.innerText = padStart(now.getHours(), 2) + ":" + padStart(now.getMinutes(), 2);
-      commentNode.appendChild(timeNode);
+      infoNode.appendChild(timeNode);
 
       const nameNode = document.createElement("span");
       nameNode.className = "user";
@@ -156,7 +163,9 @@
       if(replyTo) {
         nameNode.innerText += " → " + replyTo;
       }
-      commentNode.appendChild(nameNode);
+      infoNode.appendChild(nameNode);
+
+      commentNode.appendChild(infoNode);
 
       const contentNode = document.createElement("span");
       contentNode.className = "content";
