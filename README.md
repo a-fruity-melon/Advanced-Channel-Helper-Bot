@@ -60,6 +60,10 @@ Advanced Channel Helper Bot 并不满足于只服务一个频道。任何人都�
 | FILES_GROUP          | (int)         | bot 用来预发送图片的群。建议新建一个包含 bot 的私密群。
 ------------------------------------------------------------------------------------------
 
+随后，使用 `cgroup`，限制 chromium 的总占用内存和 CPU，除非你的小鸡非常强劲：
+
++ [`cgroup` Ubuntu 安装、配置指南](https://askubuntu.com/questions/836469/install-cgconfig-in-ubuntu-16-04#answer-899273) *请注意替换 `/path/to/chromium-browser` 为 `/path/to/chromium`*
+
 ### 修改权限
 
 在注册完 bot 并获得 token 后，向 @BotFather 分别发送 `/setprivacy` 和 `/setinline` 来设置 bot 的权限。

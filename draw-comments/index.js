@@ -24,6 +24,9 @@ let page;
 let pageLoaded = false;
 
 async function initBrowser() {
+  if(browser) {
+    await browser.close();
+  }
   browser = await puppeteer.launch({
     executablePath: config.CHROME_PATH,
     headless: !process.argv.includes("--debug"),
@@ -37,7 +40,12 @@ async function initBrowser() {
     height: 768,
     deviceScaleFactor: 4,
   });
-  await page.goto(`file:///${__dirname}/comments.html`);
+  await page.goto(`file:///${__dirname}/comments.html`, {
+    timeout: 5000,
+  }).catch(() => {
+    pageLoaded = false;
+    initBrowser();
+  });
   while(!await page.evaluate("window.loaded")) {
     await sleep(500);
   }
@@ -51,10 +59,6 @@ async function initBrowser() {
     initBrowser();
   }, 30 * 60 * 1e3);
   console.log("Browser loaded.");
-}
-
-async function cleanup() {
-  await browser.close();
 }
 
 function initServer() {
