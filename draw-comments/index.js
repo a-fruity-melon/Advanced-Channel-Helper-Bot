@@ -60,7 +60,7 @@ async function initServer() {
       timeStr: string;
       name: string;
       uid: string;
-      type: "text" | "image";
+      type: "text" | "image" | "sticker";
       content: string;
       url?: string;
       replyTo?: string;
@@ -82,7 +82,7 @@ async function initServer() {
         "${flag}"
       );`);
       if(result) {
-        if(comment.type === "image") {
+        if(comment.type === "image" || comment.type === "sticker") {
           let totalSleep = 0;
           while(!await page.evaluate(`window.images["${flag}"]`)) {
             await sleep(500);
@@ -101,7 +101,7 @@ async function initServer() {
       height: sessionHeight,
       deviceScaleFactor: 4,
     });
-    await sleep(600);
+    await sleep(100);
     await sessionNode.screenshot({
       encoding: "binary",
       type: "png",
