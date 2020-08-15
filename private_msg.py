@@ -88,15 +88,23 @@ def add_record(bot, channel_id, msg_id, message):
                                 "target_user": target_user_id,
                                 "action": "notify reply"
                             }, tag="private", log_level=80)
+                            comment_id = helper_database.get_comment_id(channel_id, target_msg_id)
+                            suffix = ""
+                            if comment_id is not None:
+                                suffix = "\n" + helper_global.value("target_comment", "", lang=channel_lang) + "https://t.me/%s/%d" % (channel_username, comment_id)
                             bot.send_message(
                                 chat_id=target_user_id, 
-                                text=helper_global.value("new_reply_message", "You receive a reply message.", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/%s/%d" % (channel_username, target_msg_id) 
+                                text=helper_global.value("new_reply_message", "You receive a reply message.", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/%s/%d" % (channel_username, target_msg_id) + suffix
                             )
                         else:
                             link_id = abs(channel_id) % 10000000000
+                            comment_id = helper_database.get_comment_id(channel_id, target_msg_id)
+                            suffix = ""
+                            if comment_id is not None:
+                                suffix = "\n" + helper_global.value("target_comment", "", lang=channel_lang) + "https://t.me/c/%d/%d" % (link_id, comment_id)
                             bot.send_message(
                                 chat_id=target_user_id, 
-                                text=helper_global.value("new_reply_message", "You receive a reply message.", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/c/%d/%d" % (link_id, target_msg_id) 
+                                text=helper_global.value("new_reply_message", "You receive a reply message.", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/c/%d/%d" % (link_id, target_msg_id) + suffix
                             )
 
     return helper_database.add_record(channel_id, msg_id, username, name, msg_type, msg_content, media_id, date, user_id, ori_msg_id, target_name)
@@ -201,8 +209,10 @@ def update_comments(bot, channel_id, msg_id, update_mode):
     for record in rev_records:
         name = record[3]
         ftype = "text" if record[4] == "text" else "unsupported"
-        if record[4] == "photo" or record[4] == "sticker":
+        if record[4] == "photo":
             ftype = "image"
+        elif record[4] == "sticker":
+            ftype = "sticker"
         content = record[5]
         fid = record[6]
         timestr = record[7]
@@ -239,16 +249,22 @@ def update_comments(bot, channel_id, msg_id, update_mode):
         with open(fpath, "rb") as f:
             photo_message = bot.send_photo(
                 chat_id=scope["FILES_GROUP"],
-                photo=f
+                photo=f,
+                caption=helper_global.records_to_str(render_as_text_records, channel_lang),
+                parse_mode=telegram.ParseMode.HTML
             ).result()
             photo = photo_message.photo[0]
-            media = telegram.InputMediaPhoto(photo.file_id)
+            comment_text = helper_global.records_to_str(render_as_text_records, channel_lang)
+            media = telegram.InputMediaPhoto(
+                photo.file_id,
+                caption=comment_text,
+                parse_mode=telegram.ParseMode.HTML
+            )
             bot.edit_message_media(
                 # text=helper_global.records_to_str(render_as_text_records, channel_lang),
                 media=media,
-                caption=helper_global.records_to_str(render_as_text_records, channel_lang),
-                chat_id=channel_id, 
-                message_id=comment_id, 
+                chat_id=channel_id,
+                message_id=comment_id,
                 parse_mode=telegram.ParseMode.HTML,
                 reply_markup=motd_markup
             )
@@ -384,15 +400,23 @@ def private_msg(bot, update):
             "action": "notify channel owner"
         }, tag="private", log_level=80)
         if username is not None:
+            suffix = ""
+            if comment_exist:
+                comment_id = helper_database.get_comment_id(channel_id, msg_id)
+                suffix = "\n" + helper_global.value("target_comment", "", lang=channel_lang) + "https://t.me/%s/%d" % (username, comment_id)
             bot.send_message(
                 chat_id=admin_id, 
-                text=helper_global.value("new_comment_message", "You have a new comment message.", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/%s/%d" % (username, msg_id) 
+                text=helper_global.value("new_comment_message", "You have a new comment message.", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/%s/%d" % (username, msg_id) + suffix
             )
         else:
             link_id = abs(channel_id) % 10000000000
+            suffix = ""
+            if comment_exist:
+                comment_id = helper_database.get_comment_id(channel_id, msg_id)
+                suffix = "\n" + helper_global.value("target_comment", "", lang=channel_lang) + "https://t.me/c/%d/%d" % (link_id, comment_id)
             bot.send_message(
                 chat_id=admin_id, 
-                text=helper_global.value("new_comment_message", "You have a new comment message.", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/c/%d/%d" % (link_id, msg_id) 
+                text=helper_global.value("new_comment_message", "You have a new comment message.", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/c/%d/%d" % (link_id, msg_id) + suffix
             )
 
     if result == 0:

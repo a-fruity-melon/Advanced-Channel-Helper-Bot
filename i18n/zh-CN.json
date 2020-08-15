@@ -59,6 +59,7 @@
     "new_comment_message": "您收到了新的评论",
     "new_reply_message": "您收到了一条评论回复",
     "target_message": "目标消息：",
+    "target_comment": "评论区：",
     "like_recorded": "您觉得这很 %s",
     "comment_refreshing": "评论区刷新中...",
     "reply_to": "回复 ",

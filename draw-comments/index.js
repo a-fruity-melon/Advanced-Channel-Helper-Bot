@@ -101,6 +101,7 @@ async function initServer() {
       height: sessionHeight,
       deviceScaleFactor: 4,
     });
+    await sleep(600);
     await sessionNode.screenshot({
       encoding: "binary",
       type: "png",
@@ -108,9 +109,11 @@ async function initServer() {
     });
     res.send({path: imagePath});
     res.end();
-    await page.evaluate(`removeSession("${sessionId}");`);
-    await page.close();
-    await browser.close();
+    if(!process.argv.includes("--debug")) {
+      await page.evaluate(`removeSession("${sessionId}");`);
+      await page.close();
+      await browser.close();
+    }
   });
   app.listen(PORT, () => console.log("app listening on", PORT));
 }

@@ -59,6 +59,7 @@
     "new_comment_message": "Novo comentário recebido.",
     "new_reply_message": "Nova resposta recebida.",
     "target_message": "Mensagem de destino: ",
+    "target_comment": "Área de comentários:",
     "like_recorded": "Você enviou %s.",
     "comment_refreshing": "Atualizando...",
     "reply_to": "Responder para "

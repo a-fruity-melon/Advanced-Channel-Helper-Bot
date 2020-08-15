@@ -47,17 +47,23 @@ def start(bot, update, args):
             )
         ]]
         motd_markup = InlineKeyboardMarkup(motd_keyboard)
+        comment_id = helper_database.get_comment_id(channel_id, msg_id)
+        suffix = ""
         if username is not None:
+            if comment_id is not None:
+                suffix = "\n" + helper_global.value("target_comment", "", lang=channel_lang) + "https://t.me/%s/%d" % (username, comment_id)
             bot.send_message(
                 chat_id=update.message.chat_id, 
-                text=helper_global.value("start_comment_mode", "", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/%s/%d" % (username, msg_id),
+                text=helper_global.value("start_comment_mode", "", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/%s/%d" % (username, msg_id) + suffix,
                 reply_markup=motd_markup
             )
         else:
             link_id = abs(channel_id) % 10000000000
+            if comment_id is not None:
+                suffix = "\n" + helper_global.value("target_comment", "", lang=channel_lang) + "https://t.me/%d/%d" % (link_id, comment_id)
             bot.send_message(
                 chat_id=update.message.chat_id, 
-                text=helper_global.value("start_comment_mode", "", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/c/%d/%d" % (link_id, msg_id),
+                text=helper_global.value("start_comment_mode", "", lang=channel_lang) + "\n" + helper_global.value("target_message", "", lang=channel_lang) + "https://t.me/c/%d/%d" % (link_id, msg_id) + suffix,
                 reply_markup=motd_markup
             )
     elif params[0] == "show":

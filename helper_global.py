@@ -51,7 +51,7 @@ def get_sender_name(message):
 
 
 def records_to_str(records, lang):
-    s = value("comment_header", "", lang=lang) + "\n"
+    s = ""
     if records is None or len(records) == 0:
         s += value("comment_empty", "", lang=lang)
         return s

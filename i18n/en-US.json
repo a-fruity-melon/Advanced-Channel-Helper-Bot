@@ -59,6 +59,7 @@
     "new_comment_message": "New comment received.",
     "new_reply_message": "New reply received.",
     "target_message": "Target message: ",
+    "target_comment": "Comments message: ",
     "like_recorded": "You %s it.",
     "comment_refreshing": "Refreshing...",
     "reply_to": "Reply to ",
