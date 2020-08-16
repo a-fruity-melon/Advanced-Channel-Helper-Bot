@@ -50,6 +50,24 @@ Advanced Channel Helper Bot 并不满足于只服务一个频道。任何人都�
 
 `python3 -m pip install python-telegram-bot ninesix`
 
+### 配置 Headless Chrome
+
+1. 安装 Node.js
+   [https://nodejs.org/zh-cn/download/package-manager/](https://nodejs.org/zh-cn/download/package-manager/)
+2. 安装 yarn package manager
+   [https://classic.yarnpkg.com/en/docs/install](https://classic.yarnpkg.com/en/docs/install)
+3. 安装 Chromium
+   + Ubuntu: `sudo apt-get install chromium-browser` 来安装 `chromium`。
+4. 配置 `config.js`
+   创建 `./draw-comments/config.js` 以指定 Chromuim：
+   ```js
+   module.exports = {
+     CHROME_PATH: "path/to/executable"
+   };
+   ```
+5. 安装 Node.js 依赖：
+   `cd draw-comments && yarn install`
+
 ### 配置文件
 
 请将 `helper_const.py.sample` 重命名为 `helper_const.py`，并填写其中的配置项目。
@@ -71,24 +89,6 @@ Advanced Channel Helper Bot 并不满足于只服务一个频道。任何人都�
 ### 修改权限
 
 在注册完 bot 并获得 token 后，向 @BotFather 分别发送 `/setprivacy` 和 `/setinline` 来设置 bot 的权限。
-
-### 配置 Headless Chrome
-
-1. 安装 Node.js
-   [https://nodejs.org/zh-cn/download/package-manager/](https://nodejs.org/zh-cn/download/package-manager/)
-2. 安装 yarn package manager
-   [https://classic.yarnpkg.com/en/docs/install](https://classic.yarnpkg.com/en/docs/install)
-3. 安装 Chromium
-   + Ubuntu: `sudo apt-get install chromium-browser` 来安装 `chromium`。
-4. 配置 `config.js`
-   创建 `./draw-comments/config.js` 以指定 Chromuim：
-   ```js
-   module.exports = {
-     CHROME_PATH: "path/to/executable"
-   };
-   ```
-5. 安装 Node.js 依赖：
-   `cd draw-comments && yarn install`
 
 ### 运行 bot 
 
@@ -113,6 +113,10 @@ A：首先确认你的 VPS 能直连 Telegram 服务器，否则你就需要设�
 Q：Cannot find module 'xxx'
 
 A：`cd draw-comments && yarn install`（假如没有 yarn，用 `npm install` 也是可以的）
+
+Q：Running as root without `--no-sandbox` is not supported
+
+A：代码中有加 `--no-sandbox`。解决方法参照：https://github.com/puppeteer/puppeteer/issues/3698#issuecomment-506311305
 
 ## 致谢
 
