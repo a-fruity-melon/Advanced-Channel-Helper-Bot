@@ -58,13 +58,15 @@ Advanced Channel Helper Bot 并不满足于只服务一个频道。任何人都�
    [https://classic.yarnpkg.com/en/docs/install](https://classic.yarnpkg.com/en/docs/install)
 3. 安装 Chromium
    + Ubuntu: `sudo apt-get install chromium-browser` 来安装 `chromium`。
-4. 配置 `config.js`
-   创建 `./draw-comments/config.js` 以指定 Chromuim：
+4. 配置 `config.js`：
+   创建 `./draw-comments/config.js` 以指定 Chromuim 的路径：
    ```js
    module.exports = {
      CHROME_PATH: "path/to/executable"
    };
    ```
+
+   您可以通过 `which chromium` 来查看二进制文件的路径。
 5. 安装 Node.js 依赖：
    `cd draw-comments && yarn install`
 
