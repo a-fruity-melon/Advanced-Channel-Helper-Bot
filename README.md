@@ -122,6 +122,13 @@ Q：Running as root without `--no-sandbox` is not supported
 
 A：代码中有加 `--no-sandbox`。解决方法参照：https://github.com/puppeteer/puppeteer/issues/3698#issuecomment-506311305
 
+
+## 后续计划
+
++ [ ] 修复 Dice 等内建随机 Sticker 的显示问题
++ [ ] 支援渲染 Animate Sticker（基于 `puppeteer-lottie`）
++ [ ] 支援渲染 gif 图（基于 `ffmpeg`）
+
 ## 致谢
 
 Advanced Channel Helper Bot 站在 [Channel Helper Bot](https://github.com/JogleLew/channel-helper-bot) 的肩膀上。
