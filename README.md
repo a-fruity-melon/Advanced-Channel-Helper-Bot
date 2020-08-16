@@ -6,6 +6,15 @@ Advanced Channel Helper Bot 是一个 Telegram Bot，用于给频道添加更强
 
 [跳转到特性介绍](#特性)
 
+## 前置需求
+
++ 国外 VPS
++ Python >= 3.6
++ Node.js >= 12
++ yarn / npm
++ root 权限（安装 Chromium 要用）
++ Telegram Bot Token（私聊联系 @BotFather 获取）
+
 ## 部署
 
 为了能运行 Advanced Channel Helper Bot，需要准备一个 Python 3 的环境，并需要使用 pip 安装相应的依赖。
