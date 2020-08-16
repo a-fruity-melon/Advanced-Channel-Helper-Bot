@@ -42,9 +42,13 @@ Advanced Channel Helper Bot 并不满足于只服务一个频道。任何人都�
 
 为了能运行 Advanced Channel Helper Bot，需要准备一个 Python 3 的环境，并需要使用 pip 安装相应的依赖。
 
-### 安装依赖 
+### 安装 Python 依赖
 
 `pip3 install python-telegram-bot ninesix`
+
+或者
+
+`python3 -m pip install python-telegram-bot ninesix`
 
 ### 配置文件
 
@@ -60,7 +64,7 @@ Advanced Channel Helper Bot 并不满足于只服务一个频道。任何人都�
 | FILES_GROUP          | (int)         | bot 用来预发送图片的群。建议新建一个包含 bot 的私密群。
 ------------------------------------------------------------------------------------------
 
-随后，使用 `cgroup`，限制 chromium 的总占用内存和 CPU，除非你的小鸡非常强劲：
+（可选）随后，使用 `cgroup`，限制 chromium 的总占用内存和 CPU，除非你的小鸡非常强劲：
 
 + [`cgroup` Ubuntu 安装、配置指南](https://askubuntu.com/questions/836469/install-cgconfig-in-ubuntu-16-04#answer-899273) *请注意替换 `/path/to/chromium-browser` 为 `/path/to/chromium`*
 
@@ -70,25 +74,45 @@ Advanced Channel Helper Bot 并不满足于只服务一个频道。任何人都�
 
 ### 配置 Headless Chrome
 
-在 `./draw-comments` 中执行完 `yarn install` 后，将从网络上下载的 `chromium` 二进制文件放到特定目录下，并创建 `./draw-comments/config.js` 以指定该文件：
-
-```js
-module.exports = {
-  CHROME_PATH: "path/to/executable"
-};
-```
-
-P.S. 在 Ubuntu 上，你也可以使用 `sudo apt-get install chromium-browser` 来安装 `chromium`。使用 `which chromium` 来查看可执行文件的位置。
-
-Emoji 可能会渲染失败。Ubuntu 用户请阅读 https://askubuntu.com/questions/1029661/18-04-color-emoji-not-showing-up-at-all-in-chrome-only-partially-in-firefox#answer-1029675。其余 Linux 发行版应当有类似解决方案，请自行搜索。
-
-假如你没看懂，说明你不适合配置本 bot 的服务器端。（棒读
+1. 安装 Node.js
+   [https://nodejs.org/zh-cn/download/package-manager/](https://nodejs.org/zh-cn/download/package-manager/)
+2. 安装 yarn package manager
+   [https://classic.yarnpkg.com/en/docs/install](https://classic.yarnpkg.com/en/docs/install)
+3. 安装 Chromium
+   + Ubuntu: `sudo apt-get install chromium-browser` 来安装 `chromium`。
+4. 配置 `config.js`
+   创建 `./draw-comments/config.js` 以指定 Chromuim：
+   ```js
+   module.exports = {
+     CHROME_PATH: "path/to/executable"
+   };
+   ```
+5. 安装 Node.js 依赖：
+   `cd draw-comments && yarn install`
 
 ### 运行 bot 
 
-`python3 helper_main.py`
+```shell
+python3 ./helper_main.py  # 常驻后台：nohup python3 ./helper_main.py 1 > /dev/null 2>&1 &
+cd ./draw-comments && nohup node index.js 1 > output.log 2>&1 &
+cat output.log  # 看到 app listening on 6899 则说明配置正确。
+```
 
-`cd ./draw-comments && nohup node index.js 1 >> output.log 2>&1 &`
+### Debug
+
+Q：有乱码
+
+A：Emoji 可能会渲染失败。Ubuntu 用户请阅读 https://askubuntu.com/questions/1029661/18-04-color-emoji-not-showing-up-at-all-in-chrome-only-partially-in-firefox#answer-1029675。其余 Linux 发行版应当有类似解决方案，请自行搜索。
+
+假如你没看懂，说明你不适合配置本 bot 的服务器端。（棒读
+
+Q：bot 用不了，log 中显示 connection refused
+
+A：首先确认你的 VPS 能直连 Telegram 服务器，否则你就需要设置 `$http_proxy` 和 `$https_proxy` 环境变量。随后，使用 `lsof -i:6899` 确认 `node` 正工作在该端口。最后，`cat draw-comments/output.log` 检查是否输出了错误提示。
+
+Q：Cannot find module 'xxx'
+
+A：`cd draw-comments && yarn install`（假如没有 yarn，用 `npm install` 也是可以的）
 
 ## 致谢
 
