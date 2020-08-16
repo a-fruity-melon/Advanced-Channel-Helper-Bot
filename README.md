@@ -83,7 +83,7 @@ cat output.log  # 看到 app listening on 6899 则说明配置正确。
 
 Q：有乱码
 
-A：Emoji 可能会渲染失败。Ubuntu 用户请阅读 https://askubuntu.com/questions/1029661/18-04-color-emoji-not-showing-up-at-all-in-chrome-only-partially-in-firefox#answer-1029675。其余 Linux 发行版应当有类似解决方案，请自行搜索。
+A：Emoji 可能会渲染失败。Ubuntu 用户请阅读 https://askubuntu.com/questions/1029661/18-04-color-emoji-not-showing-up-at-all-in-chrome-only-partially-in-firefox#answer-1029675 。其余 Linux 发行版应当有类似解决方案，请自行搜索。
 
 假如你没看懂，说明你不适合配置本 bot 的服务器端。（棒读
 
