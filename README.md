@@ -92,6 +92,8 @@ Advanced Channel Helper Bot 并不满足于只服务一个频道。任何人都�
 
 ### 运行 bot 
 
+**强烈建议不要用 root 权限运行本应用！运行了应该也没啥事但还是不建议！**
+
 ```shell
 python3 ./helper_main.py  # 常驻后台：nohup python3 ./helper_main.py 1 > /dev/null 2>&1 &
 cd ./draw-comments && nohup node index.js 1 > output.log 2>&1 &

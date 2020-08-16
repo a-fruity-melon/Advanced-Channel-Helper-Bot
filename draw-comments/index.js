@@ -23,7 +23,7 @@ async function initBrowser(scope) {
   const browser = await puppeteer.launch({
     executablePath: config.CHROME_PATH,
     headless: !process.argv.includes("--debug"),
-    args: [ process.getuid() === 0 ? "--no-sandbox" : ""],
+    args: [ process.getuid() === 0 ? "--no-sandbox" : "" ],
   });
   let page = (await browser.pages())[0];
   const oldPage = page;
