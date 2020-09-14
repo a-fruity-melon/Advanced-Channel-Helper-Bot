@@ -10,7 +10,11 @@ const express = require("express");
 const app = express();
 
 const PORT = 6899;
-console.log("[PID]", process.pid);
+console.log("[INFO]", "PID:", process.pid);
+
+if(process.getuid() === 0) {
+  console.log("[WARN]", "强烈建议不要以 root 权限运行本程序！虽然应该也没有什么安全隐患（");
+}
 
 /**
  * @param {{ pageLoaded: boolean; }} scope
@@ -20,6 +24,7 @@ async function initBrowser(scope) {
   const browser = await puppeteer.launch({
     executablePath: config.CHROME_PATH,
     headless: !process.argv.includes("--debug"),
+    args: [ process.getuid() === 0 ? "--no-sandbox" : "" ],
   });
   let page = (await browser.pages())[0];
   let oldPage = page;
