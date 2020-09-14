@@ -1,4 +1,5 @@
 // @ts-check
+const cp = require("child_process");
 const config = require("./config");
 const path = require("path");
 const { randomBytes } = require("crypto");
@@ -21,9 +22,10 @@ async function initBrowser(scope) {
     headless: !process.argv.includes("--debug"),
   });
   let page = (await browser.pages())[0];
-  const oldPage = page;
+  let oldPage = page;
   page = await browser.newPage();
   await oldPage.close();
+  oldPage = null;
   await page.setViewport({
     width: 1024,
     height: 768,
@@ -36,6 +38,10 @@ async function initBrowser(scope) {
     while(!await page.evaluate("window.loaded")) {
       await sleep(500);
     }
+    setTimeout(async () => {
+      await page.close();
+      await browser.close();
+    }, 60 * 1e3);
     scope.pageLoaded = true;
     page.once("close", () => {
       scope.pageLoaded = false;
@@ -110,9 +116,18 @@ async function initServer() {
     res.send({path: imagePath});
     res.end();
     if(!process.argv.includes("--debug")) {
-      await page.evaluate(`removeSession("${sessionId}");`);
-      await page.close();
-      await browser.close();
+      const bpid = browser.process().pid;
+      try {
+        await page.evaluate(`removeSession("${sessionId}");`);
+      } catch (e) {}
+      try {
+        await page.close();
+      } catch (e) {}
+      try {
+        await browser.close();
+      } catch (e) {
+        cp.exec("kill " + bpid, () => {});
+      }
     }
   });
   app.listen(PORT, () => console.log("app listening on", PORT));
