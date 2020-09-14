@@ -26,6 +26,7 @@ async function initBrowser(scope) {
     headless: !process.argv.includes("--debug"),
     args: [ process.getuid() === 0 ? "--no-sandbox" : "" ],
   });
+  console.log("browser", browser.process().pid);
   let page = (await browser.pages())[0];
   let oldPage = page;
   page = await browser.newPage();
