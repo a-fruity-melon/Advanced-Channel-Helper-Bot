@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "$0")"
+nohup python3 ./helper_main.py 1>>./channel-helper-log.log 2>&1 &

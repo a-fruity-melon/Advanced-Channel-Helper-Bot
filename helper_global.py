@@ -125,7 +125,7 @@ def parse_entity(src, entity_list):
             begin_str = '<pre>'
             end_str = '</pre>'
         elif entity.type == 'text_link':
-            begin_str = '<a href="%s">%s ' % (entity.url, entity.url)
+            begin_str = '<a href="%s">' % (entity.url)
             end_str = '</a>'
         p_str += src[head:entity.offset].replace('<', '&lt;').replace('>', '&gt;')
         p_str += begin_str

@@ -236,7 +236,11 @@ def update_comments(bot, channel_id, msg_id, update_mode):
         }
         infos.append(info)
         if ftype == "text":
-            render_as_text_records.append(record)
+            if len(render_as_text_records) < 5:
+                render_as_text_records.append(record)
+            else:
+                render_as_text_records.remove(render_as_text_records[0])
+                render_as_text_records.append(record)
         else:
             render_as_text_records = []
 
