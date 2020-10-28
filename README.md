@@ -87,6 +87,8 @@ A：Emoji 可能会渲染失败。Ubuntu 用户请阅读 https://askubuntu.com/q
 
 假如你没看懂，说明你不适合配置本 bot 的服务器端。（棒读
 
+UPDATE 或许可以试试 https://gitlab.com/es20490446e/emoji.conf 这个傻瓜式配置脚本。
+
 Q：bot 用不了，log 中显示 connection refused
 
 A：首先确认你的 VPS 能直连 Telegram 服务器，否则你就需要设置 `$http_proxy` 和 `$https_proxy` 环境变量。随后，使用 `lsof -i:6899` 确认 `node` 正工作在该端口。最后，`cat draw-comments/output.log` 检查是否输出了错误提示。
@@ -104,7 +106,7 @@ A：代码中有加 `--no-sandbox`。解决方法参照：https://github.com/pup
 
 + [ ] 修复 Dice 等内建随机 Sticker 的显示问题
 + [ ] 支援渲染 Animate Sticker（基于 `puppeteer-lottie`）
-+ [ ] 支援渲染 gif 图（基于 `ffmpeg`）
++ [ ] 支援渲染 gif 图（实际上是 mp4 格式，所以需要基于 `ffmpeg`）
 
 ## 特性
 
