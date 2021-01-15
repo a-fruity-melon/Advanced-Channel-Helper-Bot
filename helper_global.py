@@ -63,7 +63,8 @@ def records_to_str(records, lang):
         msg_content = record[5]
         reply_to = record[10]
         if reply_to:
-            s += ("<b>%s -> %s</b>: " % (name, reply_to))
+            reply_to = reply_to.replace('<', '&lt;').replace('>', '&gt;')
+            s += ("<b>%s -&gt; %s</b>: " % (name, reply_to))
         else:
             s += ("<b>%s</b>: " % name)
         if not msg_type == "text":
